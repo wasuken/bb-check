@@ -30,9 +30,12 @@ begin
     fn, sn = n.css('.bb-score__team p').map(&:text)
     fs, _, ss = n.css('.bb-score__status .bb-score__score').map(&:text)
     # 以前取得した情報とおなじなら無視。
-    next if history["#{fn}-#{sn}"] && history["#{fn}-#{sn}"][fn] == fs && history["#{fn}-#{sn}"][sn] == ss
-    scores << "#{fn} VS #{sn} (#{fs} - #{ss})"
     table["#{fn}-#{sn}"] = {fn => fs, sn => ss}
+    if history["#{fn}-#{sn}"] && history["#{fn}-#{sn}"][fn] == fs && history["#{fn}-#{sn}"][sn] == ss
+      next
+    else
+      scores << "#{fn} VS #{sn} (#{fs} - #{ss})"
+    end
   end
   exit if scores.size.zero?
   data = { "text" => scores.join("\n"), "channel" => config['channel'] }
